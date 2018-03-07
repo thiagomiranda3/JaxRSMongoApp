@@ -2,15 +2,22 @@ package br.com.tommiranda.jerseymongoapp.domain;
 
 public class Endereco {
     private String rua;
-    private String numero;
+    private Integer numero;
     private String cidade;
     private String estado;
+
+    public Endereco(String rua, Integer numero, String cidade, String estado) {
+        this.rua = rua;
+        this.numero = numero;
+        this.cidade = cidade;
+        this.estado = estado;
+    }
 
     public String getRua() {
         return rua;
     }
 
-    public String getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
