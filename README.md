@@ -1,2 +1,2 @@
-# RESTeasyMongoApp
-Repositório simples para construção de uma API Rest com RESTeasy utilizando MongoDB
+# JerseyMongoApp
+Repositório simples para construção de uma API Rest com JAX-RS utilizando MongoDB
