@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-@Path("evento")
+@Path("eventos")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class EventoController {
@@ -50,8 +50,8 @@ public class EventoController {
 
         if (eventoRepository.add(evento)) {
             //URI uri = uriInfo.getAbsolutePathBuilder()
-             //       .path("XXX")
-              //      .build();
+            //       .path("XXX")
+            //      .build();
 
             return Response.ok()
                     .entity("Evendo criado com sucesso!")
