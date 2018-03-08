@@ -15,6 +15,6 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
     
     <servlet-mapping>
         <servlet-name>Jersey Web Application</servlet-name>
-        <url-pattern>/webapi/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 </web-app>
