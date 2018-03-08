@@ -4,6 +4,7 @@ import br.com.tommiranda.jerseymongoapp.domain.Autor;
 import br.com.tommiranda.jerseymongoapp.domain.Endereco;
 import br.com.tommiranda.jerseymongoapp.domain.Evento;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 public final class EventoMapper {
 
@@ -11,8 +12,7 @@ public final class EventoMapper {
     }
 
     public static Document toDocument(final Evento evento) {
-        return new Document("_id", evento.getId())
-                .append("nome", evento.getNome())
+        return new Document("nome", evento.getNome())
                 .append("descricao", evento.getDescricao())
                 .append("autor", AutorMapper.toDocument(evento.getAutor()))
                 .append("endereco", toDocument(evento.getEndereco()));
@@ -26,7 +26,7 @@ public final class EventoMapper {
     }
 
     public static Evento toEvento(final Document document) {
-        Integer _id = document.get("_id", Integer.class);
+        ObjectId _id = document.get("_id", ObjectId.class);
         String nome = document.get("nome", String.class);
         String descricao = document.get("descricao", String.class);
         Autor autor = AutorMapper.toAutor(document.get("autor", Document.class));

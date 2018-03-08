@@ -2,6 +2,7 @@ package br.com.tommiranda.jerseymongoapp.mapper;
 
 import br.com.tommiranda.jerseymongoapp.domain.Autor;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 public final class AutorMapper {
 
@@ -9,13 +10,12 @@ public final class AutorMapper {
     }
 
     public static Document toDocument(final Autor autor) {
-        return new Document("_id", autor.getId())
-                .append("nome", autor.getNome())
+        return new Document("nome", autor.getNome())
                 .append("email", autor.getEmail());
     }
     
     public static Autor toAutor(final Document document) {
-        int _id = document.get("_id", Integer.class);
+        ObjectId _id = document.get("_id", ObjectId.class);
         String nome = document.get("nome", String.class);
         String email = document.get("email", String.class);
         

@@ -3,12 +3,13 @@ package br.com.tommiranda.jerseymongoapp.domain;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.bson.types.ObjectId;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Evento {
 
-    private Integer _id;
+    private ObjectId _id;
     private String nome;
     private String descricao;
     private Endereco endereco;
@@ -17,7 +18,7 @@ public class Evento {
     public Evento() {
     }
 
-    public Evento(Integer _id, String nome, String descricao, Endereco endereco, Autor autor) {
+    public Evento(ObjectId _id, String nome, String descricao, Endereco endereco, Autor autor) {
         this._id = _id;
         this.nome = nome;
         this.descricao = descricao;
@@ -25,7 +26,7 @@ public class Evento {
         this.autor = autor;
     }
 
-    public Integer getId() {
+    public ObjectId getId() {
         return _id;
     }
 
@@ -45,7 +46,7 @@ public class Evento {
         return autor;
     }
 
-    public void setId(Integer _id) {
+    public void setId(ObjectId _id) {
         this._id = _id;
     }
 

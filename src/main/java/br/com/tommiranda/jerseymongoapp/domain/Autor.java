@@ -3,25 +3,26 @@ package br.com.tommiranda.jerseymongoapp.domain;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.bson.types.ObjectId;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Autor {
 
-    private Integer _id;
+    private ObjectId _id;
     private String nome;
     private String email;
 
     public Autor() {
     }
 
-    public Autor(int _id, String nome, String email) {
+    public Autor(ObjectId _id, String nome, String email) {
         this._id = _id;
         this.nome = nome;
         this.email = email;
     }
 
-    public int getId() {
+    public ObjectId getId() {
         return _id;
     }
 
@@ -33,7 +34,7 @@ public class Autor {
         return email;
     }
 
-    public void setId(Integer _id) {
+    public void setId(ObjectId _id) {
         this._id = _id;
     }
 
