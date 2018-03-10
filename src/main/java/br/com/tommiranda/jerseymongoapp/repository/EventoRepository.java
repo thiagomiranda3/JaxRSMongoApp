@@ -12,14 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 public class EventoRepository {
 
     private final MongoDatabase db = MongoConnection.getConnection();
     private final MongoCollection<Document> collection = db.getCollection(CollectionNames.Evento);
 
-    public Evento findById(int id) {
-        Bson query = new BasicDBObject("_id", id);
+    public Evento findById(String id) {
+        Bson query = new BasicDBObject("_id", new ObjectId(id));
         FindIterable<Document> queryResult = collection.find(query);
 
         for (Document doc : queryResult) {

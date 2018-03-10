@@ -12,31 +12,32 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 public class AutorRepository {
 
     private final MongoDatabase db = MongoConnection.getConnection();
     private final MongoCollection<Document> collection = db.getCollection(CollectionNames.Autor);
 
-    public Autor findById(int id) {
-        Bson query = new BasicDBObject("_id", id);
+    public Autor findById(String id) {
+        Bson query = new BasicDBObject("_id", new ObjectId(id));
         FindIterable<Document> queryResult = collection.find(query);
-        
-        for(Document doc : queryResult) {
+
+        for (Document doc : queryResult) {
             return AutorMapper.toAutor(doc);
         }
-        
+
         return null;
     }
-    
+
     public List<Autor> getAll() {
         List<Autor> autorList = new ArrayList<>();
         FindIterable<Document> queryResult = collection.find();
-        
-        for(Document doc : queryResult) {
+
+        for (Document doc : queryResult) {
             autorList.add(AutorMapper.toAutor(doc));
         }
-        
+
         return autorList;
     }
 

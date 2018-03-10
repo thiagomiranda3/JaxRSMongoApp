@@ -1,8 +1,8 @@
 package br.com.tommiranda.jerseymongoapp.mapper;
 
 import br.com.tommiranda.jerseymongoapp.domain.Autor;
+import br.com.tommiranda.jerseymongoapp.dtos.AutorDto;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 public final class AutorMapper {
 
@@ -13,12 +13,19 @@ public final class AutorMapper {
         return new Document("nome", autor.getNome())
                 .append("email", autor.getEmail());
     }
-    
+
     public static Autor toAutor(final Document document) {
-        ObjectId _id = document.get("_id", ObjectId.class);
         String nome = document.get("nome", String.class);
         String email = document.get("email", String.class);
-        
-        return new Autor(_id, nome, email);
+
+        return new Autor(nome, email);
+    }
+
+    public static Autor toAutor(final AutorDto autorView) {
+        return new Autor(autorView.nome, autorView.email);
+    }
+
+    public static AutorDto toAutorDto(final Autor autor) {
+        return new AutorDto(autor.getNome(), autor.getEmail());
     }
 }

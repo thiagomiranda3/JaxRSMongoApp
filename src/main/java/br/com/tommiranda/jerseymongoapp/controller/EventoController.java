@@ -1,7 +1,9 @@
 package br.com.tommiranda.jerseymongoapp.controller;
 
 import br.com.tommiranda.jerseymongoapp.domain.Evento;
+import br.com.tommiranda.jerseymongoapp.mapper.EventoMapper;
 import br.com.tommiranda.jerseymongoapp.repository.EventoRepository;
+import br.com.tommiranda.jerseymongoapp.dtos.EventoDto;
 import java.net.URI;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -30,25 +32,25 @@ public class EventoController {
     @GET
     public Response getAll() {
         List<Evento> eventos = eventoRepository.getAll();
-        return Response.ok(eventos).build();
+        return Response.ok(EventoMapper.toListEventoDto(eventos)).build();
     }
 
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") int id) {
+    public Response getById(@PathParam("id") String id) {
         Evento evento = eventoRepository.findById(id);
-        return Response.ok(evento).build();
+        return Response.ok(EventoMapper.toEventoDto(evento)).build();
     }
 
     @POST
-    public Response add(Evento evento) {
-        if (evento == null) {
+    public Response add(EventoDto eventoDto) {
+        if (eventoDto == null) {
             return Response.status(Status.BAD_REQUEST)
                     .entity("Evento não pode ser nulo!")
                     .build();
         }
 
-        if (eventoRepository.add(evento)) {
+        if (eventoRepository.add(EventoMapper.toEvento(eventoDto))) {
             //URI uri = uriInfo.getAbsolutePathBuilder()
             //       .path("XXX")
             //      .build();
