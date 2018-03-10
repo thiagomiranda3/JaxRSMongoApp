@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -61,6 +62,30 @@ public class EventoController {
         } else {
             return Response.status(Status.BAD_REQUEST)
                     .entity("Houve problemas na criação do evento")
+                    .build();
+        }
+    }
+
+    @PUT
+    @Path("{id}")
+    public Response update(@PathParam("id") String id, EventoDto eventoDto) {
+        if (eventoDto == null) {
+            return Response.status(Status.BAD_REQUEST)
+                    .entity("Evento não pode ser nulo!")
+                    .build();
+        }
+
+        if (eventoRepository.update(id, EventoMapper.toEvento(eventoDto))) {
+            //URI uri = uriInfo.getAbsolutePathBuilder()
+            //       .path("XXX")
+            //      .build();
+
+            return Response.ok()
+                    .entity("Evendo atualizado com sucesso!")
+                    .build();
+        } else {
+            return Response.status(Status.BAD_REQUEST)
+                    .entity("Houve problemas na atualização do evento")
                     .build();
         }
     }

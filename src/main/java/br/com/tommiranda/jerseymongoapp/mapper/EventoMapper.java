@@ -50,10 +50,11 @@ public final class EventoMapper {
 
     public static Evento toEvento(final EventoDto eventoDto) {
         ObjectId eventoId = null;
-        
-        if(eventoDto._id != null)
+
+        if (eventoDto._id != null) {
             eventoId = new ObjectId(eventoDto._id);
-        
+        }
+
         return new Evento(
                 eventoId,
                 eventoDto.nome,

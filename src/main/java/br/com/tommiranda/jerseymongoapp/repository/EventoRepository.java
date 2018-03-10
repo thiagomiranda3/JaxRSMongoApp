@@ -46,6 +46,19 @@ public class EventoRepository {
 
         try {
             collection.insertOne(eventoDocument);
+            System.out.println(eventoDocument.get("_id"));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Boolean update(final String eventoId, final Evento evento) {
+        Bson query = new BasicDBObject("_id", new ObjectId(eventoId));
+        Document eventoDocument = EventoMapper.toDocument(evento);
+
+        try {
+            collection.replaceOne(query, eventoDocument);
             return true;
         } catch (Exception e) {
             return false;
