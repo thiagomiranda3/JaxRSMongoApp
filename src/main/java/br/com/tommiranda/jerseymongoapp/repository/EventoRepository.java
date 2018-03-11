@@ -8,6 +8,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
@@ -26,8 +28,8 @@ public class EventoRepository {
         this.collection = db.getCollection(CollectionNames.Evento);
     }
 
-    public Evento findById(String id) {
-        Bson query = new BasicDBObject("_id", new ObjectId(id));
+    public Evento findById(String eventoId) {
+        Bson query = new BasicDBObject("_id", new ObjectId(eventoId));
         FindIterable<Document> queryResult = collection.find(query);
 
         for (Document doc : queryResult)
@@ -63,7 +65,19 @@ public class EventoRepository {
         Document eventoDocument = mapper.toDocument(evento);
 
         try {
-            return collection.replaceOne(query, eventoDocument).getModifiedCount() > 0;
+            UpdateResult result = collection.replaceOne(query, eventoDocument);
+            return result.getModifiedCount() > 0;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Boolean delete(final String eventoId) {
+        Bson query = new BasicDBObject("_id", new ObjectId(eventoId));
+
+        try {
+            DeleteResult result = collection.deleteOne(query);
+            return result.getDeletedCount() > 0;
         } catch (Exception e) {
             throw e;
         }

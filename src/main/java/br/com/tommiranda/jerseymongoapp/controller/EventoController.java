@@ -11,6 +11,7 @@ import br.com.tommiranda.jerseymongoapp.validator.EventoDtoValidator;
 import java.net.URI;
 import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -29,25 +30,25 @@ import javax.ws.rs.core.UriInfo;
 public class EventoController {
 
     private final EventoMapper mapper;
-    private final EventoRepository eventoRepository;
+    private final EventoRepository repository;
     private final EventoDtoValidator dtoValidator;
 
     public EventoController() {
         this.mapper = new EventoMapper();
         this.dtoValidator = new EventoDtoValidator();
-        this.eventoRepository = new EventoRepository();
+        this.repository = new EventoRepository();
     }
 
     @GET
     public List<EventoDto> getAll() {
-        List<Evento> eventos = eventoRepository.getAll();
+        List<Evento> eventos = repository.getAll();
         return mapper.toListEventoDto(eventos);
     }
 
     @GET
-    @Path("/{id}")
+    @Path("{id}")
     public Response getById(@PathParam("id") String id) {
-        Evento evento = eventoRepository.findById(id);
+        Evento evento = repository.findById(id);
 
         if (evento == null)
             return Response.status(Status.NOT_FOUND)
@@ -67,7 +68,7 @@ public class EventoController {
                     .build();
 
         try {
-            Evento evento = eventoRepository.add(mapper.toEvento(eventoDto));
+            Evento evento = repository.add(mapper.toEvento(eventoDto));
 
             URI location = uriInfo.getAbsolutePathBuilder()
                     .path(evento.hexId())
@@ -93,13 +94,32 @@ public class EventoController {
                     .build();
 
         try {
-            if (eventoRepository.update(id, mapper.toEvento(eventoDto)))
+            if (repository.update(id, mapper.toEvento(eventoDto)))
                 return Response.ok(new NotificationSuccess(eventoDto))
                         .build();
 
             return Response.status(Status.NOT_FOUND)
                     .entity(new NotificationException("Evento não cadastrado"))
                     .build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST)
+                    .entity(new NotificationException(e.getMessage()))
+                    .build();
+        }
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Response delete(@PathParam("id") String id) {
+        try {
+            if (repository.delete(id))
+                return Response.status(Status.OK)
+                        .entity(new NotificationSuccess("Evento excluido com sucesso"))
+                        .build();
+            else
+                return Response.status(Status.NOT_FOUND)
+                        .entity(new NotificationException("Evento não cadastrado"))
+                        .build();
         } catch (Exception e) {
             return Response.status(Status.BAD_REQUEST)
                     .entity(new NotificationException(e.getMessage()))
