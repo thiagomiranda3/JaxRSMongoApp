@@ -8,7 +8,7 @@ public abstract class BaseNotification<T> implements Notification<T> {
     public BaseNotification(T notification) {
         this.retorno = notification;
     }
-    
+
     @Override
     public Boolean getSucesso() {
         return sucesso;

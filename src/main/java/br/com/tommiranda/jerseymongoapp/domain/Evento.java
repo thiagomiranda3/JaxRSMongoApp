@@ -4,11 +4,11 @@ import org.bson.types.ObjectId;
 
 public class Evento {
 
-    private ObjectId _id;
-    private String nome;
-    private String descricao;
-    private Endereco endereco;
-    private Autor autor;
+    private final ObjectId _id;
+    private final String nome;
+    private final String descricao;
+    private final Endereco endereco;
+    private final Autor autor;
 
     public Evento(ObjectId _id, String nome, String descricao, Endereco endereco, Autor autor) {
         this._id = _id;
@@ -18,8 +18,8 @@ public class Evento {
         this.autor = autor;
     }
 
-    public ObjectId getId() {
-        return _id;
+    public String hexId() {
+        return _id.toHexString();
     }
 
     public String getNome() {

@@ -1,8 +1,8 @@
 package br.com.tommiranda.jerseymongoapp.core;
 
-public class NoticationSuccess extends BaseNotification<Object>{
+public class NotificationSuccess extends BaseNotification<Object> {
 
-    public NoticationSuccess(Object notification) {
+    public NotificationSuccess(Object notification) {
         super(notification);
         this.sucesso = true;
     }

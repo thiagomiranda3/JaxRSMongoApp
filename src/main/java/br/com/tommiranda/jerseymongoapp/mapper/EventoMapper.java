@@ -51,8 +51,8 @@ public final class EventoMapper {
     public static Evento toEvento(final EventoDto eventoDto) {
         ObjectId eventoId = null;
 
-        if (eventoDto._id != null) {
-            eventoId = new ObjectId(eventoDto._id);
+        if (eventoDto.id != null) {
+            eventoId = new ObjectId(eventoDto.id);
         }
 
         return new Evento(
@@ -75,7 +75,7 @@ public final class EventoMapper {
 
     public static EventoDto toEventoDto(final Evento evento) {
         return new EventoDto(
-                evento.getId().toString(),
+                evento.hexId().toString(),
                 evento.getNome(),
                 evento.getDescricao(),
                 toEnderecoDto(evento.getEndereco()),

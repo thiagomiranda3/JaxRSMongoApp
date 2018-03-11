@@ -41,15 +41,15 @@ public class EventoRepository {
         return eventoList;
     }
 
-    public Boolean add(final Evento evento) {
+    public Evento add(final Evento evento) {
         Document eventoDocument = EventoMapper.toDocument(evento);
 
         try {
             collection.insertOne(eventoDocument);
-            System.out.println(eventoDocument.get("_id"));
-            return true;
+
+            return EventoMapper.toEvento(eventoDocument);
         } catch (Exception e) {
-            return false;
+            throw e;
         }
     }
 
@@ -58,10 +58,9 @@ public class EventoRepository {
         Document eventoDocument = EventoMapper.toDocument(evento);
 
         try {
-            collection.replaceOne(query, eventoDocument);
-            return true;
+            return collection.replaceOne(query, eventoDocument).getModifiedCount() > 0;
         } catch (Exception e) {
-            return false;
+            throw e;
         }
     }
 }
