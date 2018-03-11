@@ -14,13 +14,11 @@ public class AutorDtoValidator extends BaseValidator<AutorDto> {
             return false;
         }
 
-        if (autor.nome == null || autor.nome.isEmpty()) {
+        if (autor.nome == null || autor.nome.isEmpty())
             errorMessages.add("Nome do autor não pode ser nulo");
-        }
 
-        if (autor.email == null || autor.email.isEmpty()) {
+        if (autor.email == null || autor.email.isEmpty())
             errorMessages.add("Email do autor não pode ser nulo");
-        }
 
         return errorMessages.isEmpty();
     }

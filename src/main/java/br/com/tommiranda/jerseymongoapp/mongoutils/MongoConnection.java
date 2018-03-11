@@ -13,9 +13,8 @@ public abstract class MongoConnection {
     }
 
     public static MongoClient getMongoClient() {
-        if (mongoClient == null) {
+        if (mongoClient == null)
             mongoClient = new MongoClient(new MongoClientURI(mongoUri));
-        }
 
         return mongoClient;
     }

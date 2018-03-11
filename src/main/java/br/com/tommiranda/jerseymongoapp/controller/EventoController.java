@@ -1,12 +1,12 @@
 package br.com.tommiranda.jerseymongoapp.controller;
 
-import br.com.tommiranda.jerseymongoapp.core.NotificationSuccess;
 import br.com.tommiranda.jerseymongoapp.core.NotificationError;
 import br.com.tommiranda.jerseymongoapp.core.NotificationException;
+import br.com.tommiranda.jerseymongoapp.core.NotificationSuccess;
 import br.com.tommiranda.jerseymongoapp.domain.Evento;
+import br.com.tommiranda.jerseymongoapp.dtos.EventoDto;
 import br.com.tommiranda.jerseymongoapp.mapper.EventoMapper;
 import br.com.tommiranda.jerseymongoapp.repository.EventoRepository;
-import br.com.tommiranda.jerseymongoapp.dtos.EventoDto;
 import br.com.tommiranda.jerseymongoapp.validator.EventoDtoValidator;
 import java.net.URI;
 import java.util.List;
@@ -28,10 +28,12 @@ import javax.ws.rs.core.UriInfo;
 @Produces(MediaType.APPLICATION_JSON)
 public class EventoController {
 
+    private final EventoMapper mapper;
     private final EventoRepository eventoRepository;
     private final EventoDtoValidator dtoValidator;
 
     public EventoController() {
+        this.mapper = new EventoMapper();
         this.dtoValidator = new EventoDtoValidator();
         this.eventoRepository = new EventoRepository();
     }
@@ -39,7 +41,7 @@ public class EventoController {
     @GET
     public List<EventoDto> getAll() {
         List<Evento> eventos = eventoRepository.getAll();
-        return EventoMapper.toListEventoDto(eventos);
+        return mapper.toListEventoDto(eventos);
     }
 
     @GET
@@ -47,34 +49,32 @@ public class EventoController {
     public Response getById(@PathParam("id") String id) {
         Evento evento = eventoRepository.findById(id);
 
-        if (evento == null) {
+        if (evento == null)
             return Response.status(Status.NOT_FOUND)
                     .entity(new NotificationException("Evento não cadastrado"))
                     .build();
-        }
 
         return Response.status(Status.OK)
-                .entity(EventoMapper.toEventoDto(evento))
+                .entity(mapper.toEventoDto(evento))
                 .build();
     }
 
     @POST
     public Response add(EventoDto eventoDto, @Context UriInfo uriInfo) {
-        if (!dtoValidator.Validate(eventoDto)) {
+        if (!dtoValidator.Validate(eventoDto))
             return Response.status(Status.BAD_REQUEST)
                     .entity(new NotificationError(dtoValidator.showErrors()))
                     .build();
-        }
 
         try {
-            Evento evento = eventoRepository.add(EventoMapper.toEvento(eventoDto));
+            Evento evento = eventoRepository.add(mapper.toEvento(eventoDto));
 
             URI location = uriInfo.getAbsolutePathBuilder()
                     .path(evento.hexId())
                     .build();
 
             return Response.status(Status.CREATED)
-                    .entity(new NotificationSuccess(EventoMapper.toEventoDto(evento)))
+                    .entity(new NotificationSuccess(mapper.toEventoDto(evento)))
                     .contentLocation(location)
                     .build();
         } catch (Exception e) {
@@ -87,17 +87,15 @@ public class EventoController {
     @PUT
     @Path("{id}")
     public Response update(@PathParam("id") String id, EventoDto eventoDto) {
-        if (!dtoValidator.Validate(eventoDto)) {
+        if (!dtoValidator.Validate(eventoDto))
             return Response.status(Status.BAD_REQUEST)
                     .entity(new NotificationError(dtoValidator.showErrors()))
                     .build();
-        }
 
         try {
-            if (eventoRepository.update(id, EventoMapper.toEvento(eventoDto))) {
+            if (eventoRepository.update(id, mapper.toEvento(eventoDto)))
                 return Response.ok(new NotificationSuccess(eventoDto))
                         .build();
-            }
 
             return Response.status(Status.NOT_FOUND)
                     .entity(new NotificationException("Evento não cadastrado"))

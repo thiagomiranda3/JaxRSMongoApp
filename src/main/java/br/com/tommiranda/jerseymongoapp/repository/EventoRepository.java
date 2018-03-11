@@ -16,16 +16,22 @@ import org.bson.types.ObjectId;
 
 public class EventoRepository {
 
-    private final MongoDatabase db = MongoConnection.getConnection();
-    private final MongoCollection<Document> collection = db.getCollection(CollectionNames.Evento);
+    private final EventoMapper mapper;
+    private final MongoDatabase db;
+    private final MongoCollection<Document> collection;
+
+    public EventoRepository() {
+        this.mapper = new EventoMapper();
+        this.db = MongoConnection.getConnection();
+        this.collection = db.getCollection(CollectionNames.Evento);
+    }
 
     public Evento findById(String id) {
         Bson query = new BasicDBObject("_id", new ObjectId(id));
         FindIterable<Document> queryResult = collection.find(query);
 
-        for (Document doc : queryResult) {
-            return EventoMapper.toEvento(doc);
-        }
+        for (Document doc : queryResult)
+            return mapper.toEvento(doc);
 
         return null;
     }
@@ -34,20 +40,19 @@ public class EventoRepository {
         List<Evento> eventoList = new ArrayList<>();
         FindIterable<Document> queryResult = collection.find();
 
-        for (Document doc : queryResult) {
-            eventoList.add(EventoMapper.toEvento(doc));
-        }
+        for (Document doc : queryResult)
+            eventoList.add(mapper.toEvento(doc));
 
         return eventoList;
     }
 
     public Evento add(final Evento evento) {
-        Document eventoDocument = EventoMapper.toDocument(evento);
+        Document eventoDocument = mapper.toDocument(evento);
 
         try {
             collection.insertOne(eventoDocument);
 
-            return EventoMapper.toEvento(eventoDocument);
+            return mapper.toEvento(eventoDocument);
         } catch (Exception e) {
             throw e;
         }
@@ -55,7 +60,7 @@ public class EventoRepository {
 
     public Boolean update(final String eventoId, final Evento evento) {
         Bson query = new BasicDBObject("_id", new ObjectId(eventoId));
-        Document eventoDocument = EventoMapper.toDocument(evento);
+        Document eventoDocument = mapper.toDocument(evento);
 
         try {
             return collection.replaceOne(query, eventoDocument).getModifiedCount() > 0;

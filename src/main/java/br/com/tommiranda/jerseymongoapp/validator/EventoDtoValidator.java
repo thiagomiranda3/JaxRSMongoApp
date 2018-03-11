@@ -21,21 +21,17 @@ public class EventoDtoValidator extends BaseValidator<EventoDto> {
             return false;
         }
 
-        if (!autorDtoValidator.Validate(evento.autor)) {
+        if (!autorDtoValidator.Validate(evento.autor))
             errorMessages.addAll(autorDtoValidator.showErrors());
-        }
 
-        if (evento.descricao == null || evento.descricao.isEmpty()) {
+        if (evento.descricao == null || evento.descricao.isEmpty())
             errorMessages.add("Descrição do evento não pode ser nula");
-        }
 
-        if (!enderecoDtoValidator.Validate(evento.endereco)) {
+        if (!enderecoDtoValidator.Validate(evento.endereco))
             errorMessages.addAll(enderecoDtoValidator.showErrors());
-        }
 
-        if (evento.nome == null || evento.nome.isEmpty()) {
+        if (evento.nome == null || evento.nome.isEmpty())
             errorMessages.add("Nome do evento não pode ser nulo");
-        }
 
         return errorMessages.isEmpty();
     }

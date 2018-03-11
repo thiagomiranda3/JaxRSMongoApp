@@ -12,34 +12,37 @@ import org.bson.types.ObjectId;
 
 public final class EventoMapper {
 
+    private final AutorMapper autorMapper;
+
     public EventoMapper() {
+        autorMapper = new AutorMapper();
     }
 
-    public static Document toDocument(final Evento evento) {
+    public Document toDocument(final Evento evento) {
         return new Document("nome", evento.getNome())
                 .append("descricao", evento.getDescricao())
-                .append("autor", AutorMapper.toDocument(evento.getAutor()))
+                .append("autor", autorMapper.toDocument(evento.getAutor()))
                 .append("endereco", toDocument(evento.getEndereco()));
     }
 
-    private static Document toDocument(final Endereco endereco) {
+    private Document toDocument(final Endereco endereco) {
         return new Document("rua", endereco.getRua())
                 .append("numero", endereco.getNumero())
                 .append("cidade", endereco.getCidade())
                 .append("estado", endereco.getEstado());
     }
 
-    public static Evento toEvento(final Document document) {
+    public Evento toEvento(final Document document) {
         ObjectId _id = document.get("_id", ObjectId.class);
         String nome = document.get("nome", String.class);
         String descricao = document.get("descricao", String.class);
-        Autor autor = AutorMapper.toAutor(document.get("autor", Document.class));
+        Autor autor = autorMapper.toAutor(document.get("autor", Document.class));
         Endereco endereco = toEndereco(document.get("endereco", Document.class));
 
         return new Evento(_id, nome, descricao, endereco, autor);
     }
 
-    private static Endereco toEndereco(final Document document) {
+    private Endereco toEndereco(final Document document) {
         String rua = document.get("rua", String.class);
         Integer numero = document.get("numero", Integer.class);
         String cidade = document.get("cidade", String.class);
@@ -48,23 +51,22 @@ public final class EventoMapper {
         return new Endereco(rua, numero, cidade, estado);
     }
 
-    public static Evento toEvento(final EventoDto eventoDto) {
+    public Evento toEvento(final EventoDto eventoDto) {
         ObjectId eventoId = null;
 
-        if (eventoDto.id != null) {
+        if (eventoDto.id != null)
             eventoId = new ObjectId(eventoDto.id);
-        }
 
         return new Evento(
                 eventoId,
                 eventoDto.nome,
                 eventoDto.descricao,
                 toEndereco(eventoDto.endereco),
-                AutorMapper.toAutor(eventoDto.autor)
+                autorMapper.toAutor(eventoDto.autor)
         );
     }
 
-    private static Endereco toEndereco(final EnderecoDto enderecoDto) {
+    private Endereco toEndereco(final EnderecoDto enderecoDto) {
         return new Endereco(
                 enderecoDto.rua,
                 enderecoDto.numero,
@@ -73,17 +75,17 @@ public final class EventoMapper {
         );
     }
 
-    public static EventoDto toEventoDto(final Evento evento) {
+    public EventoDto toEventoDto(final Evento evento) {
         return new EventoDto(
-                evento.hexId().toString(),
+                evento.hexId(),
                 evento.getNome(),
                 evento.getDescricao(),
                 toEnderecoDto(evento.getEndereco()),
-                AutorMapper.toAutorDto(evento.getAutor())
+                autorMapper.toAutorDto(evento.getAutor())
         );
     }
 
-    private static EnderecoDto toEnderecoDto(final Endereco endereco) {
+    private EnderecoDto toEnderecoDto(final Endereco endereco) {
         return new EnderecoDto(
                 endereco.getRua(),
                 endereco.getNumero(),
@@ -92,12 +94,11 @@ public final class EventoMapper {
         );
     }
 
-    public static List<EventoDto> toListEventoDto(final List<Evento> eventos) {
+    public List<EventoDto> toListEventoDto(final List<Evento> eventos) {
         List<EventoDto> eventosDto = new ArrayList<>();
 
-        for (Evento e : eventos) {
+        for (Evento e : eventos)
             eventosDto.add(toEventoDto(e));
-        }
 
         return eventosDto;
     }

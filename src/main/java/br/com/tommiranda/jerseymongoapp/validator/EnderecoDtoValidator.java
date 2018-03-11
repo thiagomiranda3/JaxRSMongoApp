@@ -14,21 +14,17 @@ public class EnderecoDtoValidator extends BaseValidator<EnderecoDto> {
             return false;
         }
 
-        if (endereco.cidade == null || endereco.cidade.isEmpty()) {
+        if (endereco.cidade == null || endereco.cidade.isEmpty())
             errorMessages.add("Cidade não pode ser nula");
-        }
 
-        if (endereco.estado == null || endereco.estado.isEmpty()) {
+        if (endereco.estado == null || endereco.estado.isEmpty())
             errorMessages.add("Estado não pode ser nulo");
-        }
 
-        if (endereco.numero == null) {
+        if (endereco.numero == null)
             errorMessages.add("Número da rua não pode ser nulo");
-        }
 
-        if (endereco.rua == null || endereco.rua.isEmpty()) {
+        if (endereco.rua == null || endereco.rua.isEmpty())
             errorMessages.add("Rua não pode ser nula");
-        }
 
         return errorMessages.isEmpty();
     }
