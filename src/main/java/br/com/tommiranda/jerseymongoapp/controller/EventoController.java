@@ -1,9 +1,13 @@
 package br.com.tommiranda.jerseymongoapp.controller;
 
+import br.com.tommiranda.jerseymongoapp.core.NoticationSuccess;
+import br.com.tommiranda.jerseymongoapp.core.Notification;
+import br.com.tommiranda.jerseymongoapp.core.NotificationError;
 import br.com.tommiranda.jerseymongoapp.domain.Evento;
 import br.com.tommiranda.jerseymongoapp.mapper.EventoMapper;
 import br.com.tommiranda.jerseymongoapp.repository.EventoRepository;
 import br.com.tommiranda.jerseymongoapp.dtos.EventoDto;
+import br.com.tommiranda.jerseymongoapp.validator.EventoDtoValidator;
 import java.net.URI;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -25,61 +29,52 @@ import javax.ws.rs.core.UriInfo;
 public class EventoController {
 
     private final EventoRepository eventoRepository;
+    private final EventoDtoValidator dtoValidator;
 
     public EventoController() {
-        eventoRepository = new EventoRepository();
+        this.dtoValidator = new EventoDtoValidator();
+        this.eventoRepository = new EventoRepository();
     }
 
     @GET
-    public Response getAll() {
+    public List<EventoDto> getAll() {
         List<Evento> eventos = eventoRepository.getAll();
-        return Response.ok(EventoMapper.toListEventoDto(eventos)).build();
+        return EventoMapper.toListEventoDto(eventos);
     }
 
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") String id) {
+    public EventoDto getById(@PathParam("id") String id) {
         Evento evento = eventoRepository.findById(id);
-        return Response.ok(EventoMapper.toEventoDto(evento)).build();
+        return EventoMapper.toEventoDto(evento);
     }
 
     @POST
-    public Response add(EventoDto eventoDto) {
-        if (eventoDto == null) {
-            return Response.status(Status.BAD_REQUEST)
-                    .entity("Evento não pode ser nulo!")
-                    .build();
-        }
+    public Notification add(EventoDto eventoDto) {
+        if (!dtoValidator.Validate(eventoDto))
+            return new NotificationError(dtoValidator.showErrors());
 
         if (eventoRepository.add(EventoMapper.toEvento(eventoDto))) {
             //URI uri = uriInfo.getAbsolutePathBuilder()
             //       .path("XXX")
             //      .build();
 
-            return Response.ok()
-                    .entity("Evendo criado com sucesso!")
-                    .build();
-        } else {
-            return Response.status(Status.BAD_REQUEST)
-                    .entity("Houve problemas na criação do evento")
-                    .build();
+            return new NoticationSuccess(eventoDto);
         }
+        
+        return new NotificationError(null);
     }
 
     @PUT
     @Path("{id}")
     public Response update(@PathParam("id") String id, EventoDto eventoDto) {
-        if (eventoDto == null) {
+        if (!dtoValidator.Validate(eventoDto)) {
             return Response.status(Status.BAD_REQUEST)
-                    .entity("Evento não pode ser nulo!")
+                    .entity(new NotificationError(dtoValidator.showErrors()))
                     .build();
         }
 
         if (eventoRepository.update(id, EventoMapper.toEvento(eventoDto))) {
-            //URI uri = uriInfo.getAbsolutePathBuilder()
-            //       .path("XXX")
-            //      .build();
-
             return Response.ok()
                     .entity("Evendo atualizado com sucesso!")
                     .build();
